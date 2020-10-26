@@ -183,4 +183,9 @@ public class ArrayImpl<E extends Comparable<? super E>> implements Array<E> {
     private int calculateNewLength() {
         return size > 0 ? size * 2 : 1;
     }
+
+    @Override
+    public E[] toArray() {
+        return data;
+    }
 }
