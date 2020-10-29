@@ -33,4 +33,6 @@ public interface Array<E> {
 
     E[] toArray();
 
+    Array<E> copy();
+
 }

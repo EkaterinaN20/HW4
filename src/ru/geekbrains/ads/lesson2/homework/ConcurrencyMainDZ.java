@@ -2,6 +2,7 @@ package ru.geekbrains.ads.lesson2.homework;
 
 import ru.geekbrains.ads.lesson2.Array;
 import ru.geekbrains.ads.lesson2.ArrayImpl;
+import ru.geekbrains.ads.lesson2.SortedArrayImpl;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,22 +12,26 @@ import java.util.function.Supplier;
 
 public class ConcurrencyMainDZ {
 
-    private static final int ARRAY_CAPACITY = 100_000;
+    private static final int ARRAY_CAPACITY = 10_000;
     private static final int MAX_VALUE = 10_000;
 
     public static void main(String[] args) throws InterruptedException, TimeoutException, ExecutionException {
         Supplier<Array<Integer>> constructor = ArrayImpl::new;
 //        Supplier<Array<Integer>> constructor = SortedArrayImpl::new;
-
+//
         Array<Integer> arr1 = createArray(constructor);
-        Array<Integer> arr2 = createArray(constructor);
-        Array<Integer> arr3 = createArray(constructor);
+//        Array<Integer> arr2 = createArray(constructor);
+//        Array<Integer> arr3 = createArray(constructor);
+//
+//        Array<Integer> arr1 = new ArrayImpl<>(ARRAY_CAPACITY);
+//        Array<Integer> arr2 = new ArrayImpl<>(ARRAY_CAPACITY);
+//        Array<Integer> arr3 = new ArrayImpl<>(ARRAY_CAPACITY);
 
-//        randomInitialize(arr1);
-//        Array<Integer> arr2 = arr1.copy();
-//        Array<Integer> arr3 = arr1.copy();
+//        randomInitialize(arr1, arr2, arr3);
+        randomInitialize(arr1);
+        Array<Integer> arr2 = arr1.copy();
+        Array<Integer> arr3 = arr1.copy();
 
-        randomInitialize(arr1, arr2, arr3);
 
         ExecutorService executorService = Executors.newFixedThreadPool(3);
 
@@ -36,7 +41,11 @@ public class ConcurrencyMainDZ {
                 measureTime(arr3::sortInsert, "Sort Insert")
         );
 
-        tasks.forEach(executorService::execute);
+        for (Runnable task : tasks) {
+            task.run();
+        }
+
+//        tasks.forEach(executorService::execute);
 
 //        for (Runnable task : tasks) {
 //            executorService.execute(task);
@@ -45,9 +54,9 @@ public class ConcurrencyMainDZ {
         executorService.shutdown();
         executorService.awaitTermination(1, TimeUnit.MINUTES);
 
-        System.out.println("bubble: " + Arrays.toString(arr1.toArray()));
-        System.out.println("select: " + Arrays.toString(arr2.toArray()));
-        System.out.println("insert: " + Arrays.toString(arr3.toArray()));
+//        System.out.println("bubble: " + Arrays.toString(arr1.toArray()));
+//        System.out.println("select: " + Arrays.toString(arr2.toArray()));
+//        System.out.println("insert: " + Arrays.toString(arr3.toArray()));
     }
 
     private static void randomInitialize(Array<Integer>... arrays) {

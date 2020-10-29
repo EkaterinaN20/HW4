@@ -2,7 +2,7 @@ package ru.geekbrains.ads.lesson2;
 
 import java.util.Arrays;
 
-public class ArrayImpl<E extends Comparable<? super E>> implements Array<E> {
+public class ArrayImpl<E extends Comparable<? super E>> implements Cloneable, Array<E> {
 
     private static final int DEFAULT_CAPACITY = 8;
 
@@ -187,5 +187,24 @@ public class ArrayImpl<E extends Comparable<? super E>> implements Array<E> {
     @Override
     public E[] toArray() {
         return data;
+    }
+
+    @Override
+    public Array<E> copy() {
+//        try {
+//            return this.clone();
+//        } catch (CloneNotSupportedException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+        ArrayImpl<E> array = new ArrayImpl<>(size);
+        array.size = size;
+        array.data = Arrays.copyOf(this.data, size);
+        return array;
+    }
+
+    @Override
+    protected ArrayImpl<E> clone() throws CloneNotSupportedException {
+        return (ArrayImpl<E>) super.clone();
     }
 }
